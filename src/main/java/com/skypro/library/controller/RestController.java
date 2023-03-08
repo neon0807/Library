@@ -15,36 +15,36 @@ public class RestController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/employee")
+    @GetMapping("/library")
     public List<Book> getEmployee() {
         return bookService.readAll();
     }
 
-    @GetMapping("/book/{isbn}")
+    @GetMapping("/library/{isbn}")
     public Book readByISBN(@PathVariable String isbn) {
         return bookService.readByISBN(isbn);
     }
 
-    @PostMapping("/employee")
+    @PostMapping("/library")
     public Book addBook(@RequestBody Book book) {
         bookService.insert(book);
         return book;
 
     }
 
-    @PutMapping("/employee")
+    @PutMapping("/library")
     public Book updateBook(@RequestBody Book book) {
 
-        bookService.update(book.getNameBook(), book.getAuthorBook(), book.getYearBook());
+        bookService.update(book.getNameBook(), book.getAuthorBook(), book.getYearBook(), book.getIsbn());
         return book;
 
     }
 
-    @DeleteMapping("/employee/{isbn}")
+    @DeleteMapping("/library/{isbn}")
     public String deleteBook(@PathVariable String isbn) {
 
         bookService.delete(isbn);
-        return "Employee with id = " + isbn + " was deleted";
+        return "Book with isbn = " + isbn + " was deleted";
 
     }
 }

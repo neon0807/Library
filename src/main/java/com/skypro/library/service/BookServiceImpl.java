@@ -21,8 +21,8 @@ public class BookServiceImpl implements BookService{
 
     @Override
     @Transactional
-    public void update(String nameBook, String authorBook, Integer yearBook) {
-        bookDAO.update(nameBook,authorBook,yearBook);
+    public void update(String nameBook, String authorBook, Integer yearBook, String isbn) {
+        bookDAO.update(nameBook,authorBook,yearBook, isbn);
     }
 
     @Override

@@ -2,86 +2,45 @@ package com.skypro.library.dao;
 
 
 import com.skypro.library.entity.Book;
-import org.springframework.stereotype.Repository;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Repository
+@Component
 public class BookDAOImpl implements BookDAO{
 
-    private Connection connection;
-    @Override
-    public void insert(Book book) {
-        try(PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO library (nameBook, authorBook, yearBook, isbn) VALUES ((?), (?), (?), (?))")) {
-            statement.setString(1, book.getNameBook());
-            statement.setString(2, book.getAuthorBook());
-            statement.setInt(3, book.getYearBook());
-            statement.setString(4, book.getIsbn());
+    private final JdbcTemplate template;
 
-            statement.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public BookDAOImpl(JdbcTemplate template) {
+        this.template = template;
     }
 
     @Override
-    public void update(String nameBook, String authorBook, Integer yearBook) {
-        try(PreparedStatement statement = connection.prepareStatement(
-                "UPDATE library SET nameBook=(?), authorBook=(?), yearBook=(?)")) {
+    public void insert(Book book) {
+        template.update("SELECT INTO library VALUES(?,?,?,?)",
+                book.getNameBook(), book.getAuthorBook(), book.getYearBook(), book.getIsbn());
+    }
 
-            statement.setString(1, nameBook);
-            statement.setString(2, authorBook);
-            statement.setInt(3, yearBook);
-
-            statement.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void update(String nameBook, String authorBook, Integer yearBook, String isbn) {
+        template.update("SELECT INTO library VALUES(?,?,?,?)",
+                nameBook, authorBook, yearBook, isbn);
     }
 
     @Override
     public void delete(String isbn) {
-        try(PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM library WHERE isbn=(?)")) {
-
-            statement.setString(1, isbn);
-            statement.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        template.update("DELETE FROM * librarry WHERE isbn = ?");
     }
 
 
     @Override
     public List<Book> readAll() {
         List <Book> bookList = new ArrayList<>();
-
-        try(PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM library")) {
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-
-                String nameBook = resultSet.getString("nameBook");
-                String authorBook = resultSet.getString("authorBook");
-                int yearBook = Integer.parseInt(resultSet.getString("yearBook"));
-                String isbn = resultSet.getString("isbn");
-
-                bookList.add(new Book(nameBook, authorBook, yearBook, isbn));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return bookList;
+        return template.query("SELECT * FROM library",
+                new BeanPropertyRowMapper());
     }
 
 
@@ -89,25 +48,8 @@ public class BookDAOImpl implements BookDAO{
 
     @Override
     public Book readByISBN(String isbn) {
-        Book book = new Book();
-
-        try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM book WHERE isbn EQUALS(?)")) {
-
-            statement.setString(1, isbn);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            while(resultSet.next()) {
-
-                book.setIsbn(resultSet.getString("isbn"));
-                book.setNameBook(resultSet.getString("nameBook"));
-                book.setAuthorBook(resultSet.getString("authorName"));
-                book.setYearBook(Integer.parseInt(resultSet.getString("yearBook")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return book;
+        return template.query("SELECT * FROM library WHERE isbn == ?",
+                new Object[]{isbn},
+                new BeanPropertyRowMapper<>(Book.class)).stream().findAny().orElse(null);
     }
 }

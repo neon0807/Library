@@ -1,11 +1,24 @@
 package com.skypro.library.entity;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+
+@EntityScan
+@Table(name = "library")
 public class Book {
 
-    private String nameBook;
-    private String authorBook;
-    private Integer yearBook;
+    @Id
+    @Column("isbn")
     private String isbn;
+    @Column("nameBook")
+    private String nameBook;
+    @Column("authorBook")
+    private String authorBook;
+    @Column("yearBook")
+    private Integer yearBook;
 
     public Book() {
     }
