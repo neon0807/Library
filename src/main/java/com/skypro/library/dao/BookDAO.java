@@ -8,7 +8,7 @@ public interface BookDAO {
 
     void insert(Book book);
 
-    void update(String nameBook, String authorBook, Integer yearBook);
+    void update(String nameBook, String authorBook, Integer yearBook, String isbn);
 
     void delete(String isbn);
 
