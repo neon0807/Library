@@ -17,7 +17,7 @@ public class SpringMVCController {
 
     @RequestMapping("/web")
     public String getBooks(Model model){
-        model.addAttribute("library", bookService.readAll());
+        model.addAttribute("books", bookService.readAll());
         return "dashboard";
     }
 }

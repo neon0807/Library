@@ -2,6 +2,7 @@ package com.skypro.library.service;
 
 import com.skypro.library.dao.BookDAO;
 import com.skypro.library.entity.Book;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
