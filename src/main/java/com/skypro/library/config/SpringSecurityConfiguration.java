@@ -25,9 +25,11 @@ public class SpringSecurityConfiguration {
         return httpSecurity.build();
     }
 
+
+
     @Bean
     public UserDetailsService users() {
-        UserDetails user = User.builder()
+        UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
                 .password("user")
                 .roles("USER")
