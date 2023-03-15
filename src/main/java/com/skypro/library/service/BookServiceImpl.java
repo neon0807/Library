@@ -2,6 +2,7 @@ package com.skypro.library.service;
 
 import com.skypro.library.dao.BookDAO;
 import com.skypro.library.entity.Book;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,18 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public void update(String nameBook, String authorBook, Integer yearBook, String isbn) {
+        if (isbn == null || nameBook == null || authorBook == null || yearBook <= 0){
+            throw new RuntimeException();
+        }
         bookDAO.update(nameBook,authorBook,yearBook, isbn);
     }
 
     @Override
     @Transactional
     public void delete(String isbn) {
+        if (isbn == null){
+            throw new RuntimeException();
+        }
         bookDAO.delete(isbn);
 
     }
@@ -41,8 +48,12 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public Book readByISBN(String isbn) {
+        if (isbn == null){
+            throw new RuntimeException();
+        }
         return bookDAO.readByISBN(isbn);
     }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.skypro.library.controller;
 
 import com.skypro.library.entity.Book;
 import com.skypro.library.service.BookService;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class RestController {
     }
 
     @GetMapping("/library")
-    public List<Book> getEmployee() {
+    public List<Book> getBook() {
         return bookService.readAll();
     }
 
