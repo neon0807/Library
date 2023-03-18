@@ -35,16 +35,12 @@ public class BookDAOImpl implements BookDAO{
         template.update("DELETE FROM * librarry WHERE isbn = ?");
     }
 
-
     @Override
     public List<Book> readAll() {
         List <Book> bookList = new ArrayList<>();
         return template.query("SELECT * FROM library",
-                new BeanPropertyRowMapper());
+                new BeanPropertyRowMapper(Book.class));
     }
-
-
-
 
     @Override
     public Book readByISBN(String isbn) {
