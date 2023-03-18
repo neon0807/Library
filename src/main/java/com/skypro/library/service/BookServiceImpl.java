@@ -8,12 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Service
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl implements BookService {
 
     private BookDAO bookDAO;
     public BookServiceImpl(BookDAO bookDAO){
         this.bookDAO = bookDAO;
     }
+
+
     @Override
     @Transactional
     public void insert(Book book) {
@@ -23,7 +25,7 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public void update(String nameBook, String authorBook, Integer yearBook, String isbn) {
-        if (isbn == null || nameBook == null || authorBook == null || yearBook <= 0){
+        if (!isValide(isbn) || nameBook == null || authorBook == null || yearBook <= 0){
             throw new RuntimeException();
         }
         bookDAO.update(nameBook,authorBook,yearBook, isbn);
@@ -32,7 +34,7 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public void delete(String isbn) {
-        if (isbn == null){
+        if (!isValide(isbn)){
             throw new RuntimeException();
         }
         bookDAO.delete(isbn);
@@ -48,7 +50,7 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public Book readByISBN(String isbn) {
-        if (isbn == null){
+        if (!isvalide(isbn)){
             throw new RuntimeException();
         }
         return bookDAO.readByISBN(isbn);
